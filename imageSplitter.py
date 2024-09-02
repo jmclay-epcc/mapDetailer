@@ -30,21 +30,21 @@ def dataSetCreator():
     directory = Path("tempDump/hr")
     directory.mkdir(parents=True, exist_ok=True)
     
-    sp("./textures/image.png", chunker, chunker*2, False, False, False, './tempDump/hr') # THis image i twice the resolution as the sketch, so while we're only reducing the sketch by a factor of two when we chop it up into bits, these bits will be 4 times smaller than the texture bits.  Moral of the story is we're using this data to train a model to scale up an image by a factor of 4.  
+    sp("./textures/image.png", chunker, chunker*2, False, False, False, './tempDump/hr') 
     sp("./sketches/image.png", chunker, chunker*2, False, False, False, './tempDump/lr')
 
     for filename in os.listdir('tempDump/lr'):
+        img = Image.open(f"./tempDump/lr/{filename}")
+        width, height = img.size
+        new_size = (width // 2, height // 2)
+        shrunk = img.resize(new_size)
+        shrunk.save(f"./tempDump/lr/{filename}")
         if filename in trainList:
             os.rename(f"./tempDump/lr/{filename}", f"./data/train/lr/{filename}")
         else:
             os.rename(f"./tempDump/lr/{filename}", f"./data/val/lr/{filename}")
             
     for filename in os.listdir('tempDump/hr'):
-        img = Image.open(f"./tempDump/hr/{filename}")
-        width, height = img.size
-        new_size = (width * 2, height * 2)
-        shrunk = img.resize(new_size)
-        shrunk.save(f"./tempDump/hr/{filename}")
         if filename in trainList:
             os.rename(f"./tempDump/hr/{filename}", f"./data/train/hr/{filename}")
         else:

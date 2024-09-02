@@ -1,8 +1,8 @@
 import os
 from PIL import Image
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from super_image import Trainer, TrainingArguments, EdsrModel, EdsrConfig
-from torchvision.transforms import Compose, Resize, ToTensor
+from torchvision.transforms import Compose, ToTensor
 
 class LocalDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -56,11 +56,11 @@ eval_dataset = LocalDataset(root_dir='./data/val', transform=transform)
 
 training_args = TrainingArguments(
     output_dir='./results',
-    num_train_epochs=10,
+    num_train_epochs=100,
 )
 
 config = EdsrConfig(
-    scale=4,
+    scale=2,
 )
 model = EdsrModel(config)
 
